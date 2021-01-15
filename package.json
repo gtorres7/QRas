@@ -1,0 +1,21 @@
+{
+  "name": "Api_Asistens",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^3.1.3",
+    "ejs-mate": "^3.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "mongodb": "^3.5.8",
+    "mongoose": "^5.10.9",
+    "qrcode": "^1.4.4"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
+}

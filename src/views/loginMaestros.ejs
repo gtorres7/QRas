@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../public/Styles/loginAlumnos.css">
+    <title>Login Maestro</title>
+</head>
+<body>
+  <div class="wrapper fadeInDown">
+    <div id="formContent">
+      <div class="fadeIn first">
+        <img src="../public/user-protection.png" id="icon" alt="User Icon" />
+      </div>
+      <form method="POST" action="/Usuario/login">
+        <input type="email" id="login" class="fadeIn second" name="Email" placeholder="Email">
+        <input type="password" id="password" class="fadeIn third" name="Passowrd" placeholder="Password">
+        <input type="button" class="fadeIn fourth" value="Log In" onclick="Enviar(this.parentNode)">
+      </form>
+      <div id="formFooter">
+        <a href="/">Home</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    function Enviar(obj){
+        var Email = obj.getElementsByTagName('input')[0].value.trim();
+        var Password = obj.getElementsByTagName('input')[1].value.trim();
+
+        var xhr = new XMLHttpRequest();
+        var url = "/Maestro/login";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        var data = JSON.stringify({"Email":Email, "Password": Password});
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if(this.responseText == "Usuario o Contraseña incorrecto"){
+                    alert(this.responseText);
+                }
+                else if(this.responseText == "/Maestro/home"){
+                    window.location = this.responseText;
+                }
+            }
+        };
+        xhr.send(data);
+    }
+  </script>
+</body>
+</html>

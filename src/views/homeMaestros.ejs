@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board Class</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"></head>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<body>
+    <!-- <a href="/">Home</a> -->
+    <div id="formFooter">
+        <a href="/">Home</a>
+      </div>
+    <div class="table-responsive-md">
+        <table class="table">
+            <thead class="thead-dark ">
+                <tr class="">
+                    <th scope="col">Name Aula</th>
+                    <th scope="col">Name Maestro</th>
+                    <th scope="col">QR</th> 
+                    <th scope="col">Password</th>
+                    <th scope="col">TiempoExpiracion</th>
+                    <th scope="col">FechaCreacion</th>
+                    <th scope="col">Asistencias</th>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i= 0; i< Aulas.length; i++){%>
+                    <tr>
+                        <td ><input name="Name" disabled type="text" value="<%= Aulas[i].Name%>" style="width: 40%;"></input></td>
+                        <td ><input name="NameMaestro" disabled type="text" value="<%= Aulas[i].NameMaestro%>" style="display: none; width: 60%;"></input></td>
+                        <td><img src="<%= Aulas[i].QR%>" alt="" style="width: 50%;" onclick="Ver(this.parentNode.parentNode)"></td>
+                        <td><input name="Password"  type="text" value="<%= Aulas[i].Password%>"   style="width: 60%;"></input></td>
+                        <td><input name="TiempoExpiracion"  type="number" value="<%= Aulas[i].TiempoExpiracion%>"   style="width: 60%;"></input></td>
+                        <td><input name="FechaCreacion"  type="text" value="<%= Aulas[i].FechaCreacion%>"   style="width: 60%;"></input></td>
+                            <td>
+                                <% if(Aulas[i].Asistencia.length != 0 || Aulas[i].Asistencia != null){%>
+                                    <% for(var j = 0; j < Aulas[i].Asistencia.length; j++){%>
+                                            <input name="Datos" style="width: 40%;" type="text" value="<%= Aulas[i].Asistencia[j].NameAlumno %>"></input>
+                                    <%}%>
+                                <%}%>
+                            </td>
+                        <td>
+                            <button class="btn btn-primary" type="submit" onclick="Update(this.parentNode.parentNode);">Update</button>
+                            <button class="btn btn-secundary" type="submit" onclick="Delete(this.parentNode.parentNode);">Delete</button>
+                        </td>
+                    </tr>
+                <%}%>
+                <tr>
+                    <td><input name="Name" placeholder="Name Aula" type="text" value=""></input></td>
+                    <td><input name="NameMaestro" placeholder="Name Maestro" type="text" style="display: none;" value="<%= NameMaestro%>"></input></td>
+                    <td><input name="Password" placeholder="Password" type="text" value=""></input></td>
+                    <td><input name="TiempoExpiracion" placeholder="Tiempo De Expiracion" type="number" value=""></input></td>
+                    
+                    <td>
+                        <button type="submit" onclick="ADD(this.parentNode.parentNode);">ADD</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function Update(obj){
+            var Name = obj.getElementsByTagName('input')[0].value;
+            var NameMaestro = obj.getElementsByTagName('input')[1].value;
+            var Password = obj.getElementsByTagName('input')[2].value;
+            var TiempoExpiracion = obj.getElementsByTagName('input')[3].value;
+
+            var xhr = new XMLHttpRequest();
+            var url = "/GenerarQR/" + Name;
+            xhr.open("PUT", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            var data = JSON.stringify({"Name": Name, "NameMaestro": NameMaestro, "Password": Password, "TiempoExpiracion": TiempoExpiracion});
+            xhr.send(data);
+        }
+
+        function ADD(obj){
+            var Name = obj.getElementsByTagName('input')[0].value;
+            var NameMaestro = obj.getElementsByTagName('input')[1].value;
+            var Password = obj.getElementsByTagName('input')[2].value;
+            var TiempoExpiracion = obj.getElementsByTagName('input')[3].value;
+         
+            if(Name != "" ){
+                var xhr = new XMLHttpRequest();
+                var url = "/Maestro/Generar";
+                xhr.open("POST", url, true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var data = JSON.stringify({"Name": Name, "NameMaestro": NameMaestro, "Password": Password, "TiempoExpiracion": TiempoExpiracion});
+                
+                xhr.send(data);
+                if(alert("Datos Guardados")){
+                    location.reload();
+                }
+            }
+            else{
+                alert("Campo Name Vacio");
+            }
+        }
+      
+        function Delete(obj){
+            var id = obj.getElementsByTagName('input')[0].value;
+
+            var xhr = new XMLHttpRequest();
+            var url = ""+id;
+            xhr.open("DELETE", url, true);
+        
+            xhr.send();
+            location.reload();
+        }
+    </script>
+</body>
+</html>
